@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import GlobalStyles from './GlobalStyles';
 
 import Searchbar from './Searchbar';
@@ -21,64 +21,55 @@ const Status = {
   REJECTED: 'rejected',
 };
 
-class App extends Component {
-  state = {
-    pictures: [],
-    loadMoreEnabled: false,
-    status: 'idle',
-  };
+export default function App() {
+  const [pictures, setPictures] = useState([]);
+  const [loadMoreEnabled, setLoadMoreEnabled] = useState(false);
+  const [status, setStatus] = useState('idle');
 
-  onSearch = async ({ text }) => {
-    this.setState({ status: Status.PENDING });
+  const onSearch = async ({ text }) => {
+    setStatus(Status.PENDING);
 
     API.query = text;
     API.resetPage();
     try {
       const { hits, totalHits } = await API.getImages();
       if (!hits.length) {
-        this.setState({ status: Status.REJECTED });
+        setStatus(Status.REJECTED);
         return;
       }
-      this.setState({
-        pictures: hits,
-        loadMoreEnabled: hits.length < totalHits,
-        status: Status.RESOLVED,
-      });
+      setPictures([...hits]);
+      setLoadMoreEnabled(hits.length < totalHits);
+      setStatus(Status.RESOLVED);
     } catch (error) {
       toast.error(error.message, { autoClose: 2000 });
-      this.setState({ status: Status.REJECTED });
+      setStatus(Status.REJECTED);
     }
   };
 
-  onLoadMoreButtonClick = async () => {
-    this.setState({ status: Status.PENDING });
+  const onLoadMoreButtonClick = async () => {
+    setStatus(Status.PENDING);
     try {
       const { hits, totalHits } = await API.getImages();
-      this.setState(
-        state => ({
-          pictures: [...state.pictures, ...hits],
-          loadMoreEnabled: state.pictures.length + hits.length < totalHits,
-          status: Status.RESOLVED,
-        }),
-        this.scrollDown
-      );
+      setPictures(pictures => {
+        return [...pictures, ...hits];
+      });
+      setLoadMoreEnabled(pictures.length + hits.length < totalHits);
+      setStatus(Status.RESOLVED);
+      setTimeout(() => scrollDown(), 1);
     } catch (error) {
-      this.setState({ status: Status.REJECTED });
+      setStatus(Status.REJECTED);
     }
   };
 
-  scrollDown = () => {
+  const scrollDown = () => {
     window.scrollBy({
       top: window.screen.availHeight / 4,
       behavior: 'smooth',
     });
   };
 
-  render() {
-    const { pictures, loadMoreEnabled, status } = this.state;
-
+  const getCuttentMarkup = () => {
     let markup = '';
-
     if (status === Status.IDLE) {
       markup = (
         <Box as="h2" margin="0 auto">
@@ -96,7 +87,7 @@ class App extends Component {
       markup = (
         <>
           <ImageGallery galleryItems={pictures} />
-          {loadMoreEnabled && <Button onClick={this.onLoadMoreButtonClick} />}
+          {loadMoreEnabled && <Button onClick={onLoadMoreButtonClick} />}
         </>
       );
     } else if (status === Status.REJECTED) {
@@ -106,17 +97,17 @@ class App extends Component {
         </Box>
       );
     }
-    return (
-      <>
-        <GlobalStyles />
-        <Container>
-          <Searchbar onSearch={this.onSearch} />
-          {markup}
-          <ToastContainer />
-        </Container>
-      </>
-    );
-  }
-}
+    return markup;
+  };
 
-export default App;
+  return (
+    <>
+      <GlobalStyles />
+      <Container>
+        <Searchbar onSearch={onSearch} />
+        {getCuttentMarkup()}
+        <ToastContainer />
+      </Container>
+    </>
+  );
+}
