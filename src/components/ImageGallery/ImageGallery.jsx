@@ -1,10 +1,25 @@
 import UlStyled from './ImageGallery.styled';
 import ImageGalleryItem from '../ImageGalleryItem';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 
 function ImageGallery({ galleryItems }) {
+  useEffect(() => {
+    const galleryRef = document.getElementById('galleryList');
+    if (galleryRef.children.length > 12) {
+      scrollDown();
+    }
+  }, [galleryItems]);
+
+  const scrollDown = () => {
+    window.scrollBy({
+      top: window.screen.availHeight / 2,
+      behavior: 'smooth',
+    });
+  };
+
   return (
-    <UlStyled>
+    <UlStyled id="galleryList">
       {galleryItems.map(item => (
         <ImageGalleryItem key={item.id} item={item} />
       ))}
