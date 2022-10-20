@@ -1,39 +1,33 @@
 import Modal from '../Modal';
-import { Component } from 'react';
+import { useState } from 'react';
 import { LiStyled, ImgStyled } from './ImageGalleryItem.styled';
 import PropTypes from 'prop-types';
 
-class ImageGalleryItem extends Component {
-  state = {
-    isModalOpen: false,
-  };
+export default function ImageGalleryItem({ item }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  toggleModal = () => {
-    this.setState(prevState => {
-      return {
-        isModalOpen: !prevState.isModalOpen,
-      };
+  const { webformatURL, tags } = item;
+
+  const toggleModal = () => {
+    console.log('toggleModal');
+    setIsModalOpen(prevState => {
+      setIsModalOpen(!prevState);
     });
   };
 
-  render() {
-    const { item } = this.props;
-    const { webformatURL, tags } = item;
-    const { isModalOpen } = this.state;
-    return (
-      <>
-        <LiStyled>
-          <ImgStyled
-            loading="lazy"
-            src={webformatURL}
-            alt={tags}
-            onClick={this.toggleModal}
-          />
-        </LiStyled>
-        {isModalOpen && <Modal item={item} onClose={this.toggleModal} />}
-      </>
-    );
-  }
+  return (
+    <>
+      <LiStyled>
+        <ImgStyled
+          loading="lazy"
+          src={webformatURL}
+          alt={tags}
+          onClick={toggleModal}
+        />
+      </LiStyled>
+      {isModalOpen && <Modal item={item} onClose={toggleModal} />}
+    </>
+  );
 }
 
 ImageGalleryItem.propTypes = {
@@ -42,5 +36,3 @@ ImageGalleryItem.propTypes = {
     tags: PropTypes.string,
   }),
 };
-
-export default ImageGalleryItem;
