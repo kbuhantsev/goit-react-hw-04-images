@@ -2,11 +2,12 @@ import UlStyled from './ImageGallery.styled';
 import ImageGalleryItem from '../ImageGalleryItem';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import { PixabaySettings } from 'constants';
 
 function ImageGallery({ galleryItems }) {
   useEffect(() => {
     const galleryRef = document.getElementById('galleryList');
-    if (galleryRef.children.length > 12) {
+    if (galleryRef.children.length > PixabaySettings.PER_PAGE) {
       scrollDown();
     }
   }, [galleryItems]);

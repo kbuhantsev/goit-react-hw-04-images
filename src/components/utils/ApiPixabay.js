@@ -1,9 +1,7 @@
 import axios from 'axios';
+import { PixabaySettings } from 'constants';
 
-const API_KEY = '29338468-0ab55cc6b7a3839e659a6ad45';
-const PER_PAGE = 12;
-const BASE_URL = 'https://pixabay.com/api/';
-
+const { API_KEY, PER_PAGE, BASE_URL } = PixabaySettings;
 export default class ApiPixabay {
   constructor() {
     this.searchQuery = '';

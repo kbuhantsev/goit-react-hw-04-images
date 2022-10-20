@@ -55,18 +55,10 @@ export default function App() {
       });
       setLoadMoreEnabled(pictures.length + hits.length < totalHits);
       setStatus(Status.RESOLVED);
-      // setTimeout(() => scrollDown(), 1);
     } catch (error) {
       setStatus(Status.REJECTED);
     }
   };
-
-  // const scrollDown = () => {
-  //   window.scrollBy({
-  //     top: window.screen.availHeight / 4,
-  //     behavior: 'smooth',
-  //   });
-  // };
 
   const getCuttentMarkup = () => {
     let markup = '';
