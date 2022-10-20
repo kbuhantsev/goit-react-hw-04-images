@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GlobalStyles from './GlobalStyles';
 
 import Searchbar from './Searchbar';
@@ -7,12 +7,10 @@ import ImageGallery from './ImageGallery';
 import Loader from './Loader';
 import Button from './Button';
 
-import ApiPixabay from './utils';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Box } from './Box';
-
-const API = new ApiPixabay();
+import usePixabay from './usePixabay';
 
 const Status = {
   IDLE: 'idle',
@@ -25,39 +23,36 @@ export default function App() {
   const [pictures, setPictures] = useState([]);
   const [loadMoreEnabled, setLoadMoreEnabled] = useState(false);
   const [status, setStatus] = useState('idle');
+  const { setNewQuery, nextPage, data } = usePixabay();
 
-  const onSearch = async ({ text }) => {
-    setStatus(Status.PENDING);
-
-    API.query = text;
-    API.resetPage();
-    try {
-      const { hits, totalHits } = await API.getImages();
-      if (!hits.length) {
-        setStatus(Status.REJECTED);
-        return;
-      }
-      setPictures([...hits]);
-      setLoadMoreEnabled(hits.length < totalHits);
-      setStatus(Status.RESOLVED);
-    } catch (error) {
-      toast.error(error.message, { autoClose: 2000 });
+  useEffect(() => {
+    if (!data) return;
+    const { hits } = data;
+    if (!hits.length) {
       setStatus(Status.REJECTED);
+      return;
     }
+    setPictures(pictures => {
+      return [...pictures, ...hits];
+    });
+    setStatus(Status.RESOLVED);
+  }, [data]);
+
+  useEffect(() => {
+    if (!data) return;
+    const { hits, totalHits } = data;
+    setLoadMoreEnabled(pictures.length + hits.length < totalHits);
+  }, [pictures, data]);
+
+  const onSearch = ({ text }) => {
+    setStatus(Status.PENDING);
+    setPictures([]);
+    setNewQuery(text);
   };
 
   const onLoadMoreButtonClick = async () => {
     setStatus(Status.PENDING);
-    try {
-      const { hits, totalHits } = await API.getImages();
-      setPictures(pictures => {
-        return [...pictures, ...hits];
-      });
-      setLoadMoreEnabled(pictures.length + hits.length < totalHits);
-      setStatus(Status.RESOLVED);
-    } catch (error) {
-      setStatus(Status.REJECTED);
-    }
+    nextPage();
   };
 
   const getCuttentMarkup = () => {
