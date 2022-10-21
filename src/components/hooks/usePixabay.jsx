@@ -10,11 +10,6 @@ export default function usePixabay() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    // console.log('query-' + query, 'page-' + page);
-    // console.log(data);
-  });
-
-  useEffect(() => {
     const getImages = async () => {
       const URL = `${BASE_URL}?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${PER_PAGE}`;
       const response = await axios.get(URL);

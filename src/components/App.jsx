@@ -10,7 +10,7 @@ import Button from './Button';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { Box } from './Box';
-import usePixabay from './usePixabay';
+import usePixabay from './hooks/usePixabay';
 
 const Status = {
   IDLE: 'idle',
