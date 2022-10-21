@@ -7,8 +7,6 @@ import ImageGallery from './ImageGallery';
 import Loader from './Loader';
 import Button from './Button';
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
 import { Box } from './Box';
 import usePixabay from './hooks/usePixabay';
 
@@ -93,7 +91,6 @@ export default function App() {
       <Container>
         <Searchbar onSearch={onSearch} />
         {getCuttentMarkup()}
-        <ToastContainer />
       </Container>
     </>
   );
