@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Form, Field, ErrorMessage } from 'formik';
+// import { Form, Field, ErrorMessage } from 'formik';
 
 const HeaderStyled = styled.header`
   top: 0;
@@ -7,6 +7,7 @@ const HeaderStyled = styled.header`
   position: sticky;
   z-index: 1100;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 64px;
@@ -20,7 +21,7 @@ const HeaderStyled = styled.header`
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 `;
 
-const SearchFormStyled = styled(Form)`
+const SearchFormStyled = styled.form`
   display: flex;
   align-items: center;
   width: 100%;
@@ -48,7 +49,7 @@ const SearchBtnStyled = styled.button`
   }
 `;
 
-const SearchInputStyled = styled(Field)`
+const SearchInputStyled = styled.input`
   display: inline-block;
   width: 100%;
   font: inherit;
@@ -65,7 +66,9 @@ const SearchInputStyled = styled(Field)`
   }
 `;
 
-const ErrorMessageStyled = styled(ErrorMessage)`
+const ErrorMessageStyled = styled.p`
+  margin-top: 5px;
+  font-weight: 700;
   color: red;
 `;
 

@@ -1,7 +1,7 @@
 import { Box } from 'components/Box';
 import PropTypes from 'prop-types';
 
-function Container({ children }) {
+export default function Container({ children }) {
   return (
     <Box display="grid" gridTemplateColumns="1fr" gridGap="16px" pb="24px">
       {children}
@@ -12,5 +12,3 @@ function Container({ children }) {
 Container.propTypes = {
   children: PropTypes.node,
 };
-
-export default Container;

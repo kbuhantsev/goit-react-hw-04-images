@@ -4,17 +4,19 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { PixabaySettings } from 'constants';
 
-function ImageGallery({ galleryItems }) {
+const { QUERY_PARAMS } = PixabaySettings;
+
+export default function ImageGallery({ galleryItems }) {
   useEffect(() => {
     const galleryRef = document.getElementById('galleryList');
-    if (galleryRef.children.length > PixabaySettings.PER_PAGE) {
+    if (galleryRef.children.length > QUERY_PARAMS.per_page) {
       scrollDown();
     }
   }, [galleryItems]);
 
   const scrollDown = () => {
     window.scrollBy({
-      top: window.screen.availHeight / 2,
+      top: window.screen.availHeight / 3,
       behavior: 'smooth',
     });
   };
@@ -31,5 +33,3 @@ function ImageGallery({ galleryItems }) {
 ImageGallery.propTypes = {
   galleryItems: PropTypes.array,
 };
-
-export default ImageGallery;

@@ -42,7 +42,11 @@ export default function App() {
     setLoadMoreEnabled(pictures.length + hits.length < totalHits);
   }, [pictures, data]);
 
-  const onSearch = ({ text }) => {
+  const onSearch = text => {
+    if (!text) {
+      setStatus(Status.REJECTED);
+      return;
+    }
     setStatus(Status.PENDING);
     setPictures([]);
     setNewQuery(text);
