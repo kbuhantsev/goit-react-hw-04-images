@@ -10,6 +10,8 @@ export default function usePixabay() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const getAxiosParams = () => {
       return {
         ...QUERY_PARAMS,
@@ -18,16 +20,17 @@ export default function usePixabay() {
       };
     };
 
-    const getImages = async () => {
+    (async function () {
       const response = await axios.get(BASE_URL, {
         params: getAxiosParams(),
+        signal: controller.signal,
       });
       setData(response.data);
-    };
+    })();
 
-    if (query) {
-      getImages();
-    }
+    return () => {
+      controller.abort();
+    };
   }, [page, query]);
 
   const nextPage = () => {
